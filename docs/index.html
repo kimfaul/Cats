@@ -7,31 +7,145 @@
         html, body { height: 100%; margin: 0; }
         body {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             background: linear-gradient(135deg, #f8fafc, #e6eef8);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
             color: #0f172a;
+            padding: 32px 16px;
+            box-sizing: border-box;
         }
-        .card {
-            max-width: 820px;
+        .logo img {
+            max-width: 480px;
             width: 90%;
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(2,6,23,0.12);
+        }
+        nav {
+            width: 100%;
+            max-width: 900px;
+            margin: 20px 0;
+            background: transparent;
+        }
+        .menu {
+            display: flex;
+            justify-content: space-evenly;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 12px;
+        }
+        .menu li {
+            flex: 1 1 0;
             text-align: center;
         }
-        h1 { margin: 0 0 12px; font-size: 1.6rem; }
-        img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 12px auto; }
-        p { margin: 12px 0 0; color: #334155; }
+        .menu a {
+            display: inline-block;
+            padding: 10px 16px;
+            color: #0f172a;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background .15s ease, color .15s ease, transform .08s ease;
+            width: 100%;
+        }
+        .menu a:hover { background: rgba(15,23,42,0.06); transform: translateY(-1px); }
+        .menu a.active { background: #0f172a; color: #fff; box-shadow: 0 6px 18px rgba(2,6,23,0.12); }
+        main {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 8px 30px rgba(2,6,23,0.08);
+            box-sizing: border-box;
+            min-height: 220px;
+        }
+        h1 { margin: 0 0 8px; font-size: 1.4rem; text-align: center; }
+        p { margin: 8px 0 0; color: #334155; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Flow is the greatest movie ever made</h1>
+    <div class="logo">
         <img src="flow.png" alt="Flow poster"/>
-        <p>That is all</p>
     </div>
+
+    <nav>
+        <ul class="menu" role="tablist">
+            <li><a href="#" data-page="home" class="active" role="tab">Home</a></li>
+            <li><a href="#" data-page="blog" role="tab">Blog</a></li>
+            <li><a href="#" data-page="cats" role="tab">Cats</a></li>
+            <li><a href="#" data-page="about" role="tab">About</a></li>
+        </ul>
+    </nav>
+
+    <main id="content" role="main">
+        <h1>Welcome</h1>
+        <p>Flow is the greatest movie ever made. Use the menu above to explore.</p>
+    </main>
+
+    <script>
+        (function(){
+            const content = document.getElementById('content');
+            const links = document.querySelectorAll('.menu a');
+
+            const pages = {
+                home: `
+                    <h1>Welcome</h1>
+                    <p>Flow is the greatest movie ever made. Use the menu above to explore.</p>
+                `,
+                blog: `
+                    <h1>Blog</h1>
+                    <p>Latest thoughts about Flow, storytelling, and filmmaking.</p>
+                    <ul>
+                        <li>Why Flow works: pacing and atmosphere</li>
+                        <li>Interview with the director (imaginary)</li>
+                        <li>Top 10 scenes</li>
+                    </ul>
+                `,
+                cats: `
+                    <h1>Cats</h1>
+                    <p>This page celebrates cats. They are cool and mysterious.</p>
+                    <p>Here's a fake list of famous cinematic cats:</p>
+                    <ol>
+                        <li>Whiskers</li>
+                        <li>Shadow</li>
+                        <li>Mittens</li>
+                    </ol>
+                `,
+                about: `
+                    <h1>About</h1>
+                    <p>Simple demo site showing a top image, a horizontal menu, and dynamic content switching without reloading the page.</p>
+                `
+            };
+
+            function setActive(link){
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            }
+
+            function loadPage(page){
+                if(!pages[page]) page = 'home';
+                content.innerHTML = pages[page];
+            }
+
+            links.forEach(link => {
+                link.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    setActive(this);
+                    loadPage(page);
+                    // update URL hash for navigability
+                    history.replaceState(null, '', '#'+page);
+                });
+            });
+
+            // load initial page from hash
+            const hash = location.hash ? location.hash.substring(1) : 'home';
+            const initialLink = Array.from(links).find(l => l.getAttribute('data-page') === hash) || links[0];
+            setActive(initialLink);
+            loadPage(hash);
+        })();
+    </script>
 </body>
 </html>
