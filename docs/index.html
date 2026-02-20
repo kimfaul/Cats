@@ -59,20 +59,23 @@
             padding: 24px;
             box-shadow: 0 8px 30px rgba(2,6,23,0.08);
             box-sizing: border-box;
-            min-height: 220px;
+            min-height: 50vh; /* make the white card taller so tall images fit */
+            overflow: auto;   /* allow scrolling inside the card if content exceeds available space */
         }
         /* ensure images inside main never overflow the white card */
         main img { max-width: 100%; height: auto; display: block; }
 
         h1 { margin: 0 0 8px; font-size: 1.4rem; text-align: center; }
         p { margin: 8px 0 0; color: #334155; }
-        /* constrain the cat image to fit inside the main card */
+        /* constrain the cat image to fit inside the main card and viewport */
         .cat-image {
             display: block;
             margin: 12px auto;
-            width: 100%;          /* allow it to scale down on small screens */
+            width: 100%;
             max-width: 560px;     /* never wider than this */
             height: auto;
+            max-height: 60vh;     /* never taller than 60% of the viewport */
+            object-fit: contain;   /* preserve aspect ratio when constrained by max-height */
             border-radius: 8px;
             box-shadow: 0 6px 18px rgba(2,6,23,0.08);
             box-sizing: border-box;
